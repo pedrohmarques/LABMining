@@ -7,17 +7,13 @@ class Repository:
     def __get_query(self, primaryLanguage):
         query = f"""
         {{
-            search(query:"stars:>100 ", type:REPOSITORY, first:100){{
-                nodes{{
-                    ... on Repository {{
-                        nameWithOwner
-                            closedIssues: issues(states: CLOSED){{
-                                totalCount
-                            }}
-                        issues{{
-                            totalCount
-                        }}
-                    }}
+            search(query: "stars:>100", type: REPOSITORY, first: 100) {{
+                nodes {{
+                ... on Repository {{
+                    id
+                    name
+                    createdAt
+                }}
                 }}
             }}
         }}
