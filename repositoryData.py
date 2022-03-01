@@ -11,4 +11,10 @@ class RepositoryData:
 
     def update(self, repositories):
         with open(self._fileName, 'w') as outfile:
-            json.dump(repositories, outfile)
+           json.dump(repositories, outfile)
+        
+    def append(self, repositories):
+        with open(self._fileName, "r") as file:
+            data = json.load(file)
+            print(repositories)
+            data.append(repositories)

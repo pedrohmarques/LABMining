@@ -12,6 +12,7 @@ if op == '1':
     print("Get Repositories")
     repositoriesJs = repository.get_repositories("JavaScript", 100)
     RepositoryData().update(repositoriesJs)
+        
 elif op == '2':
     exportDataToCsv()
 else:
