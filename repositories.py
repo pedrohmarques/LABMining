@@ -3,7 +3,7 @@ import requests
 class Repository:
     def __init__(self, token):
         self.token = token
-    
+    #DENTRO DO IF COLOCAR A MESMA QUERY DO ELSE, POREM SEM O CURSOR AFTER
     def __get_query(self, primaryLanguage, after):
         if after == None:
             query = f"""
@@ -56,5 +56,4 @@ class Repository:
                 repositories = list(map(lambda x: x, data['nodes']))
                 res = res + repositories
         return res          
-        #[{"nameWithOwner": "GAGA", "createdAt": "2017-04-18T10:33:05Z"}]
             

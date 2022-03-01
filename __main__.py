@@ -8,7 +8,7 @@ print("2 - Exporta para CSV")
 
 op = input()
 if op == '1':
-    repository = Repository("") #PASSAR SEU TOKEN AQUI
+    repository = Repository("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") #PASSAR SEU TOKEN AQUI
     print("Get Repositories")
     repositoriesJs = repository.get_repositories("JavaScript", 100)
     RepositoryData().update(repositoriesJs)
