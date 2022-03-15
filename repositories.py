@@ -8,7 +8,7 @@ class Repository:
         if after == None:
             query = f"""
             {{
-                search(query:"stars:>100  ", type:REPOSITORY, first:100){{
+                search(query:"stars:>100  language:Java", type:REPOSITORY, first:100){{
 				pageInfo{{
 					startCursor
 					hasNextPage
@@ -16,8 +16,16 @@ class Repository:
 				}}
 				nodes{{
 					... on Repository {{
-						nameWithOwner
-						createdAt
+                        nameWithOwner
+					    sshUrl
+                        createdAt
+                        updatedAt
+                        stargazers {{
+                            totalCount
+                        }}
+                        releases {{
+                            totalCount
+                        }}
 					}}
 				}}
 			    }}
@@ -26,7 +34,7 @@ class Repository:
         else:
             query = f"""
             {{
-                search(first:100, after:"{after}", query:"stars:>100  ", type:REPOSITORY){{
+                search(first:100, after:"{after}", query:"stars:>100  language:Java", type:REPOSITORY){{
 				pageInfo{{
 					startCursor
 					hasNextPage
@@ -35,7 +43,15 @@ class Repository:
 				nodes{{
 					... on Repository {{
 						nameWithOwner
-						createdAt
+                        sshUrl
+                        createdAt
+                        updatedAt
+                        stargazers {{
+                            totalCount
+                        }}
+                        releases {{
+                            totalCount
+                        }}
 					}}
 				}}
 			    }}
@@ -50,6 +66,7 @@ class Repository:
         for i in range(10):
             query = self.__get_query(primaryLanguage, after)
             result = requests.post("https://api.github.com/graphql", json={'query': query}, headers=headers)
+            print(result)
             if result.status_code == 200:
                 data = result.json()['data']['search']
                 after = data['pageInfo']['endCursor']
