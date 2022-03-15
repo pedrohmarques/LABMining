@@ -1,10 +1,12 @@
 from repositories import Repository
 from repositoryData import RepositoryData
 from exportcsv import exportDataToCsv
+from ck import CK
 
 print("Options")
 print("1 - Atualiza Repositorios")
 print("2 - Exporta para CSV")
+print("3 - Análise CK")
 
 op = input()
 if op == '1':
@@ -15,5 +17,8 @@ if op == '1':
         
 elif op == '2':
     exportDataToCsv()
+
+elif op == '3':
+    CK().call_ck()
 else:
     print("Invalido")
