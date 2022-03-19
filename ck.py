@@ -108,7 +108,7 @@ class CK:
         
         return soma_lcom
 
-    def create_csv_metric(self):
+    def create_csv_metric(self, repo):
         print('########### OBETENDO METRICAS DO REPOSITORIO ###########')
         os.chdir(self.local_repo_directory_ck)
         loc = self.get_loc_method_csv() #get loc metric
@@ -117,7 +117,7 @@ class CK:
         lcom = self.get_lcom_class() #get lcom metric
 
         os.chdir(self.local_repo_directory_ck_metric)
-        json_result = [ '', 'repo_name', loc, cbo, dit, lcom ]
+        json_result = [ '', repo, loc, cbo, dit, lcom ]
         with open('metric_repo.csv', 'a') as file:
             writer = csv.writer(file)
             writer.writerow(json_result)
@@ -130,5 +130,5 @@ class CK:
                 self.clone_repo_fork(repo, 'main') #Se der error ao tentar clonar na master, tenta clonar pela main
             
             self.ck_command()
-            self.create_csv_metric()
+            self.create_csv_metric(repo)
             self.delete_fork_directory(repo)
