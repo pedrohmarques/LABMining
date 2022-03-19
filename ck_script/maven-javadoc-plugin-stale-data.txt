@@ -1,0 +1,23 @@
+cmd.exe
+/X
+/C
+""C:\Program Files\Java\jdk-17.0.2\bin\javadoc.exe" @options @packages"
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\allclasses-index.html = 1647644030710
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\allpackages-index.html = 1647644030714
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\element-list = 1647644030268
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\help-doc.html = 1647644030823
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\index-all.html = 1647644030809
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\index.html = 1647644030636
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\jquery-ui.overrides.css = 1647644030899
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\member-search-index.js = 1647644030728
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\module-search-index.js = 1647644030717
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\options = 1647644024874
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\overview-summary.html = 1647644030813
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\overview-tree.html = 1647644030630
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\package-search-index.js = 1647644030719
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\packages = 1647644024875
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\script.js = 1647644030829
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\search.js = 1647644030841
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\stylesheet.css = 1647644030827
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\tag-search-index.js = 1647644030730
+C:\Users\pedri\Documents\LABMining\ck\target\apidocs\type-search-index.js = 1647644030721
