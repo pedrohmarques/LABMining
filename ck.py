@@ -16,7 +16,7 @@ class CK:
         self.local_repo_directory_ck = os.path.join(os.getcwd(), 'ck_result')
         self.local_repo_directory_ck_script = os.path.join(os.getcwd(), 'ck_script')
         self.local_repo_directory_ck_metric = os.path.join(os.getcwd(), 'csv_ck_metric_repo')
-        self.repoFork = ['git@github.com:libgdx/libgdx.git']
+        self.repoFork = []
         self.repo_ignorados = 0
 
     def get_repo_to_analyze(self, name):
@@ -158,7 +158,7 @@ class CK:
             
             self.ck_command()
             self.create_csv_metric(repo)
-            self.delete_fork_directory(repo)
+            self.delete_fork_directory(repo['sshUrl'])
         
         print('########### SCRIPT FINALIZADO COM ' + self.repo_ignorados + ' REPOSITORIOS IGNORADOS ###########')
             
