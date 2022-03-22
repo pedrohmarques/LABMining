@@ -5,6 +5,7 @@ import stat
 from git import Repo
 from temp import *
 #import subprocess
+from tempfile import NamedTemporaryFile
 import csv
 import json
 import pandas as pd
@@ -15,19 +16,15 @@ class CK:
         self.local_repo_directory_ck = os.path.join(os.getcwd(), 'ck_result')
         self.local_repo_directory_ck_script = os.path.join(os.getcwd(), 'ck_script')
         self.local_repo_directory_ck_metric = os.path.join(os.getcwd(), 'csv_ck_metric_repo')
-        self.repoFork = []
+        self.repoFork = ['git@github.com:libgdx/libgdx.git']
+        self.repo_ignorados = 0
 
     def get_repo_to_analyze(self, name):
-       repos = pd.read_csv('repositories_java.csv')
-       nextRepos = repos.loc[(repos["analysed"] == 'no') & (repos["responsible"] == name), "sshUrl"]
-       return nextRepos
-
-    def update_repo_analyzed(self, sshUrl):
-        print(sshUrl)
-        repos = pd.read_csv('repositories_java.csv')
-        repos.loc[repos["sshUrl"] == sshUrl, "analysed"] = 'yes'
-        repos.to_csv('repositories_java.csv', index=False)
-  
+       with open('repositories_java.csv', 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if(row['responsible'] == name and row["analysed"] == 'no'):
+                    self.repoFork.append(row)
 
     def delete_fork_directory(self, repo):
         print('########### DELETANDO: ' + repo + ' ###########')
@@ -93,56 +90,75 @@ class CK:
         
         return soma_loc
     
-    def get_cbo_class(self):
-        soma_cbo = 0
+    def get_cbo_class(self, length_csv):
+        mediana_cbo = 0
         with open('class.csv', 'r') as file:
             reader = csv.DictReader(file)
-            for row in reader:
-                soma_cbo = soma_cbo + int(row['cbo'])
+            row = list(reader)[length_csv]
+            mediana_cbo = row['cbo'] 
         
-        return soma_cbo
+        return mediana_cbo
 
     def get_dit_class(self):
-        soma_dit = 0
+        max_dit = 0
         with open('class.csv', 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                soma_dit = soma_dit + int(row['dit'])
+                if(max_dit < int(row['dit'])):
+                    max_dit = int(row['dit'])
         
-        return soma_dit
+        return max_dit
 
-    def get_lcom_class(self):
-        soma_lcom = 0
-        with open('class.csv', 'r') as file:
+    def get_lcom_class(self, length_csv):
+        mediana_lcom = 0
+        with open('class.csv', 'rt') as file:
             reader = csv.DictReader(file)
-            for row in reader:
-                soma_lcom = soma_lcom + int(row['lcom'])
-        
-        return soma_lcom
+            row = list(reader)[length_csv]
+            mediana_lcom = row['lcom'] 
+        return mediana_lcom
+
+    def get_length_csv(self):
+        length_csv = 0
+        with open('class.csv', 'r') as file:
+            length_csv = int(len(file.readlines()) / 2)
+        return length_csv
 
     def create_csv_metric(self, repo):
-        print('########### OBETENDO METRICAS DO REPOSITORIO ###########')
+        print('########### OBTENDO METRICAS DO REPOSITORIO ###########')
         os.chdir(self.local_repo_directory_ck)
-        loc = self.get_loc_method_csv() #get loc metric
-        cbo = self.get_cbo_class() #get cbo metric
-        dit = self.get_dit_class() #get dit metric
-        lcom = self.get_lcom_class() #get lcom metric
-
-        os.chdir(self.local_repo_directory_ck_metric)
-        json_result = [ '', repo, loc, cbo, dit, lcom ]
-        with open('metric_repo.csv', 'a') as file:
-            writer = csv.writer(file)
-            writer.writerow(json_result)
+        length_csv = self.get_length_csv()
+        if(length_csv > 0):
+            loc = self.get_loc_method_csv() #get loc metric
+            cbo = self.get_cbo_class(length_csv) #get cbo metric
+            dit = self.get_dit_class() #get dit metric
+            lcom = self.get_lcom_class(length_csv) #get lcom metric
+            params = { 'LCOM': int(lcom), 'DIT': int(dit), 'CBO': int(cbo), 'LOC': int(loc) }
+            self.update_repo_analyzed(repo, params)
+        else:
+            print('########### REPOSITORIO: ' + repo['sshUrl'] + ' IGNORADO ###########')
+            self.repo_ignorados = self.repo_ignorados + 1
+    
+    def update_repo_analyzed(self, repo, params):
+        os.chdir('..')
+        repos = pd.read_csv('repositories_java.csv')
+        repos.loc[repos["sshUrl"] == repo['sshUrl'], "analysed"] = 'yes'
+        repos.loc[repos["sshUrl"] == repo['sshUrl'], "LOC"] = int(params['LOC'])
+        repos.loc[repos["sshUrl"] == repo['sshUrl'], "LCOM"] = params['LCOM']
+        repos.loc[repos["sshUrl"] == repo['sshUrl'], "DIT"] = params['DIT']
+        repos.loc[repos["sshUrl"] == repo['sshUrl'], "CBO"] = params['CBO']
+        repos.to_csv('repositories_java.csv', index=False)
 
     def call_ck(self):
-        self.repoFork = self.get_repo_to_analyze('Henrique') #Pass the name of the responsible
+        self.get_repo_to_analyze('Pedro') #Pass the name of the responsible
         for repo in self.repoFork:
             try:
-                self.clone_repo_fork(repo, 'master') #Clona repositorio na master
+                self.clone_repo_fork(repo['sshUrl'], 'master') #Clona repositorio na master
             except:
-                self.clone_repo_fork(repo, 'main') #Se der error ao tentar clonar na master, tenta clonar pela main
+                self.clone_repo_fork(repo['sshUrl'], 'main') #Se der error ao tentar clonar na master, tenta clonar pela main
             
             self.ck_command()
             self.create_csv_metric(repo)
             self.delete_fork_directory(repo)
-            self.update_repo_analyzed(repo)
+        
+        print('########### SCRIPT FINALIZADO COM ' + self.repo_ignorados + ' REPOSITORIOS IGNORADOS ###########')
+            
