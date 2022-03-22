@@ -9,6 +9,7 @@ from tempfile import NamedTemporaryFile
 import csv
 import json
 import pandas as pd
+import math
 
 class CK:
     def __init__(self):
@@ -119,8 +120,15 @@ class CK:
 
     def get_length_csv(self):
         length_csv = 0
+        med = 0.5
         with open('class.csv', 'r') as file:
-            length_csv = int(len(file.readlines()) / 2)
+            value = len(file.readlines()) / 2
+            frac = math.modf(value)
+            if(frac < med):
+                length_csv = math.floor(value)
+            else:
+                length_csv = math.ceil(value)
+                
         return length_csv
 
     def create_csv_metric(self, repo):
