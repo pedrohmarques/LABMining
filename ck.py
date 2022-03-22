@@ -136,6 +136,10 @@ class CK:
             self.update_repo_analyzed(repo, params)
         else:
             print('########### REPOSITORIO: ' + repo['sshUrl'] + ' IGNORADO ###########')
+            os.chdir('..')
+            repos = pd.read_csv('repositories_java.csv')
+            repos.loc[repos["sshUrl"] == repo['sshUrl'], "analysed"] = 'yes'
+            repos.to_csv('repositories_java.csv', index=False)
             self.repo_ignorados = self.repo_ignorados + 1
     
     def update_repo_analyzed(self, repo, params):
