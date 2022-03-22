@@ -15,7 +15,19 @@ class CK:
         self.local_repo_directory_ck = os.path.join(os.getcwd(), 'ck_result')
         self.local_repo_directory_ck_script = os.path.join(os.getcwd(), 'ck_script')
         self.local_repo_directory_ck_metric = os.path.join(os.getcwd(), 'csv_ck_metric_repo')
-        self.repoFork = ['git@github.com:skylot/jadx.git']
+        self.repoFork = []
+
+    def get_repo_to_analyze(self, name):
+       repos = pd.read_csv('repositories_java.csv')
+       nextRepos = repos.loc[(repos["analysed"] == 'no') & (repos["responsible"] == name), "sshUrl"]
+       return nextRepos
+
+    def update_repo_analyzed(self, sshUrl):
+        print(sshUrl)
+        repos = pd.read_csv('repositories_java.csv')
+        repos.loc[repos["sshUrl"] == sshUrl, "analysed"] = 'yes'
+        repos.to_csv('repositories_java.csv', index=False)
+  
 
     def delete_fork_directory(self, repo):
         print('########### DELETANDO: ' + repo + ' ###########')
@@ -123,6 +135,7 @@ class CK:
             writer.writerow(json_result)
 
     def call_ck(self):
+        self.repoFork = self.get_repo_to_analyze('Henrique') #Pass the name of the responsible
         for repo in self.repoFork:
             try:
                 self.clone_repo_fork(repo, 'master') #Clona repositorio na master
@@ -132,3 +145,4 @@ class CK:
             self.ck_command()
             self.create_csv_metric(repo)
             self.delete_fork_directory(repo)
+            self.update_repo_analyzed(repo)
