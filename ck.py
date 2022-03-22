@@ -29,23 +29,25 @@ class CK:
 
     def delete_fork_directory(self, repo):
         print('########### DELETANDO: ' + repo + ' ###########')
-        for root, dirs, files in os.walk(self.local_repo_directory_fork): 
-            for dir in dirs:
-                os.chmod(os.path.join(root, dir), stat.S_IRWXU)
-            for file in files:
-                os.chmod(os.path.join(root, file), stat.S_IRWXU)
-        shutil.rmtree(self.local_repo_directory_fork)
+        if os.path.exists(self.local_repo_directory_fork):
+            for root, dirs, files in os.walk(self.local_repo_directory_fork): 
+                for dir in dirs:
+                    os.chmod(os.path.join(root, dir), stat.S_IRWXU)
+                for file in files:
+                    os.chmod(os.path.join(root, file), stat.S_IRWXU)
+            shutil.rmtree(self.local_repo_directory_fork)
 
 
     def clone_repo_fork(self, repo, dest):
         print('########### CLONANDO: ' + repo + ' ###########')
         if os.path.exists(self.local_repo_directory_fork):
             self.delete_fork_directory(repo)
-            Repo.clone_from(repo, 
-                self.local_repo_directory_fork, branch=dest)
-        else:
+            
+        try:
             Repo.clone_from(repo, 
                 self.local_repo_directory_fork, branch=dest) 
+        except Exception:
+            pass
 
     def chdirectory(path):
         os.chdir(path)
@@ -128,7 +130,7 @@ class CK:
                 length_csv = math.floor(value)
             else:
                 length_csv = math.ceil(value)
-                
+
         return length_csv
 
     def create_csv_metric(self, repo):
