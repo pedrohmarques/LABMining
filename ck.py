@@ -125,7 +125,9 @@ class CK:
         med = 0.5
         with open('class.csv', 'r') as file:
             value = len(file.readlines()) / 2
-            frac = math.modf(value)
+            whole, frac = math.modf(value)
+            print(frac)
+            print(med)
             if(frac < med):
                 length_csv = math.floor(value)
             else:
@@ -163,7 +165,7 @@ class CK:
         repos.to_csv('repositories_java.csv', index=False)
 
     def call_ck(self):
-        self.get_repo_to_analyze('Pedro') #Pass the name of the responsible
+        self.get_repo_to_analyze('Henrique') #Pass the name of the responsible
         for repo in self.repoFork:
             try:
                 self.clone_repo_fork(repo['sshUrl'], 'master') #Clona repositorio na master
