@@ -97,7 +97,11 @@ class CK:
         mediana_cbo = 0
         with open('class.csv', 'r') as file:
             reader = csv.DictReader(file)
-            row = list(reader)[length_csv]
+            if(length_csv == 1):
+                row = list(reader)[0]
+            else:
+                row = list(reader)[length_csv]
+            
             mediana_cbo = row['cbo'] 
         
         return mediana_cbo
@@ -116,7 +120,11 @@ class CK:
         mediana_lcom = 0
         with open('class.csv', 'rt') as file:
             reader = csv.DictReader(file)
-            row = list(reader)[length_csv]
+            if(length_csv == 1):
+                row = list(reader)[0]
+            else:
+                row = list(reader)[length_csv]
+                
             mediana_lcom = row['lcom'] 
         return mediana_lcom
 
@@ -126,8 +134,6 @@ class CK:
         with open('class.csv', 'r') as file:
             value = len(file.readlines()) / 2
             frac, whore = math.modf(value)
-            print(frac)
-            print(med)
             if(frac < med):
                 length_csv = math.floor(value)
             else:
