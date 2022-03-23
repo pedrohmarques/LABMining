@@ -125,7 +125,7 @@ class CK:
         med = 0.5
         with open('class.csv', 'r') as file:
             value = len(file.readlines()) / 2
-            whole, frac = math.modf(value)
+            frac, whore = math.modf(value)
             print(frac)
             print(med)
             if(frac < med):
