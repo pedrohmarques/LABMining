@@ -124,7 +124,7 @@ class CK:
                 row = list(reader)[0]
             else:
                 row = list(reader)[length_csv]
-                
+
             mediana_lcom = row['lcom'] 
         return mediana_lcom
 
@@ -132,7 +132,8 @@ class CK:
         length_csv = 0
         med = 0.5
         with open('class.csv', 'r') as file:
-            value = len(file.readlines()) / 2
+            reader = csv.DictReader(file)
+            value = len(list(reader)) / 2
             frac, whore = math.modf(value)
             if(frac < med):
                 length_csv = math.floor(value)
@@ -161,6 +162,7 @@ class CK:
             self.repo_ignorados = self.repo_ignorados + 1
     
     def update_repo_analyzed(self, repo, params):
+        print('###########  SALVANDO METRICAS: ' + repo['sshUrl'] + ' ###########')
         os.chdir('..')
         repos = pd.read_csv('repositories_java.csv')
         repos.loc[repos["sshUrl"] == repo['sshUrl'], "analysed"] = 'yes'
@@ -171,7 +173,7 @@ class CK:
         repos.to_csv('repositories_java.csv', index=False)
 
     def call_ck(self):
-        self.get_repo_to_analyze('Henrique') #Pass the name of the responsible
+        self.get_repo_to_analyze('Pedro') #Pass the name of the responsible
         for repo in self.repoFork:
             try:
                 self.clone_repo_fork(repo['sshUrl'], 'master') #Clona repositorio na master
