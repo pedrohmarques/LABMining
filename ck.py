@@ -183,6 +183,4 @@ class CK:
             self.ck_command()
             self.create_csv_metric(repo)
             self.delete_fork_directory(repo['sshUrl'])
-        
-        print('########### SCRIPT FINALIZADO COM ' + self.repo_ignorados + ' REPOSITORIOS IGNORADOS ###########')
             
